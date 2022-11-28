@@ -1,56 +1,26 @@
 package com.github.eokasta.springtest.service;
 
-import com.github.eokasta.springtest.cache.PokemonCache;
 import com.github.eokasta.springtest.model.HighlightPokemon;
 import com.github.eokasta.springtest.model.Pokemon;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-@Service("pokemonService")
-public class PokemonService {
+public interface PokemonService {
 
-    @Autowired
-    private PokeAPIService pokeAPIService;
+    /**
+     * Get list of {@link Pokemon}.
+     *
+     * @param query Query to filter pokemons.
+     * @return If query is null, return all pokemons. If query is not null, return pokemons that name starts with query.
+     */
+    List<Pokemon> getPokemons(String query);
 
-    @Autowired
-    private PokemonCache pokemonCache;
-
-    public List<Pokemon> getPokemons(final String query) {
-        final Map<String, Pokemon> pokemonMap = pokemonCache.getPokemonMap();
-        final List<Pokemon> pokemons;
-
-        if (query == null) {
-            pokemons = new ArrayList<>(pokemonMap.values());
-        } else {
-            pokemons = pokemonMap.values()
-                  .stream()
-                  .filter(pokemon -> pokemon.getName().toLowerCase().startsWith(query.toLowerCase()))
-                  .collect(Collectors.toList());
-        }
-
-        // TODO: apply sort
-
-        return pokemons;
-    }
-
-    public List<HighlightPokemon> getPokemonsHighlight(final String query) {
-        final List<HighlightPokemon> pokemons = getPokemons(query)
-              .stream()
-              .map(pokemon -> new HighlightPokemon(pokemon, formatWithHighlight(pokemon.getName(), query)))
-              .collect(Collectors.toList());
-
-        // TODO: apply sort
-
-        return pokemons;
-    }
-
-    private String formatWithHighlight(final String pokemonName, final String query) {
-        return pokemonName.replaceFirst("(?i)" + query, "<pre>" + query + "</pre>");
-    }
+    /**
+     * Get list of {@link HighlightPokemon}.
+     *
+     * @param query Query to filter pokemons.
+     * @return If query is null, return null. If query is not null, return pokemons that name starts with query.
+     */
+    List<HighlightPokemon> getPokemonsHighlight(String query);
 
 }

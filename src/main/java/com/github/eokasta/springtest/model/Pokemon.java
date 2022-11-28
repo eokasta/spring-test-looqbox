@@ -1,8 +1,5 @@
 package com.github.eokasta.springtest.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.stereotype.Component;
-
 import java.io.Serializable;
 
 public class Pokemon implements Serializable {

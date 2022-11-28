@@ -1,30 +1,32 @@
 package com.github.eokasta.springtest;
 
-import com.github.eokasta.springtest.cache.PokemonCache;
-import com.github.eokasta.springtest.service.PokeAPIService;
-import com.github.eokasta.springtest.task.UpdateCacheTask;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.eokasta.springtest.service.impl.UpdateRepositoryServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 @SpringBootApplication
 public class SpringTestApplication {
-
-    @Autowired
-    private PokemonCache pokemonCache;
-
-    @Autowired
-    private PokeAPIService pokeAPIService;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringTestApplication.class, args);
     }
 
-    @EventListener(ApplicationStartedEvent.class)
-    public void onApplicationStartedEvent() {
-        new UpdateCacheTask(pokemonCache, pokeAPIService).run();
+    private final ScheduledExecutorService updateRepositorScheduler;
+
+    private final UpdateRepositoryServiceImpl updateRepositoryService;
+    
+    
+    public SpringTestApplication(UpdateRepositoryServiceImpl updateRepositoryService) {
+        this.updateRepositoryService = updateRepositoryService;
+        this.updateRepositorScheduler = Executors.newSingleThreadScheduledExecutor();
+        updateRepositorScheduler.scheduleAtFixedRate(updateRepositoryService, 0, 10, TimeUnit.MINUTES);
     }
+
 
 }
