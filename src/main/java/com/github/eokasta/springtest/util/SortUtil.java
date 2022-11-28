@@ -7,6 +7,13 @@ import java.util.List;
 
 public class SortUtil {
 
+    /**
+     * Sort a list with Bubble Sort.
+     *
+     * @param content the list to sort.
+     * @param type {@link Type} of sort
+     * @return sorted list.
+     */
     public static List<Pokemon> sort(List<Pokemon> content, Type type) {
         final int size = content.size();
         final List<Pokemon> sortedList = new ArrayList<>(content);
@@ -30,6 +37,13 @@ public class SortUtil {
         return sortedList;
     }
 
+    /**
+     * Invert positions of two elements of a list.
+     *
+     * @param content the list.
+     * @param indexOne index of first element.
+     * @param indexTwo index of last element.
+     */
     private static void invertPositions(List<Pokemon> content, int indexOne, int indexTwo) {
         final Pokemon firstElement = content.get(indexOne);
         final Pokemon lastElement = content.get(indexTwo);

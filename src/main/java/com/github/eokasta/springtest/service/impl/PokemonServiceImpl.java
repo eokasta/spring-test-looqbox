@@ -19,7 +19,8 @@ public class PokemonServiceImpl implements PokemonService {
         this.pokemonRepository = pokemonRepository;
     }
 
-    public List<Pokemon> getPokemons(String query) {
+    @Override
+    public List<Pokemon> getPokemons(String query, SortUtil.Type sortType) {
         final List<Pokemon> pokemons;
 
         if (query == null) {
@@ -28,11 +29,33 @@ public class PokemonServiceImpl implements PokemonService {
             pokemons = pokemonRepository.getByNameWithContains(query);
         }
 
-        return SortUtil.sort(pokemons, SortUtil.Type.ALPHABETICAL);
+        return SortUtil.sort(pokemons, sortType);
     }
 
-    public List<HighlightPokemon> getPokemonsHighlight(String query) {
-        return getPokemons(query)
+    @Override
+    public List<HighlightPokemon> getPokemonsHighlight(String query, SortUtil.Type sortType) {
+        return toHighlightPokemonList(query, getPokemons(query, sortType));
+    }
+
+    public List<Pokemon> getPokemons(String query, String sort) {
+        SortUtil.Type sortType = SortUtil.Type.ALPHABETICAL;
+        if (sort != null) {
+            try {
+                sortType = SortUtil.Type.valueOf(sort.toUpperCase());
+            } catch (IllegalArgumentException exception) {
+                throw new IllegalStateException("Could not find sort type: " + sort, exception);
+            }
+        }
+
+        return getPokemons(query, sortType);
+    }
+
+    public List<HighlightPokemon> getPokemonsHighlight(String query, String sort) {
+        return toHighlightPokemonList(query, getPokemons(query, sort));
+    }
+
+    private List<HighlightPokemon> toHighlightPokemonList(String query, List<Pokemon> pokemons) {
+        return pokemons
                 .stream()
                 .map(pokemon -> new HighlightPokemon(pokemon, StringUtil.formatWithHighlight(pokemon.getName(), query)))
                 .toList();
