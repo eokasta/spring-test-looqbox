@@ -38,7 +38,7 @@ public class PokemonRepository {
 
     public void update(PokemonResponse response) {
         pokemonMap.clear();
-        response.getPokemons().forEach(this::insert);
+        response.pokemonList().forEach(this::insert);
     }
 
 }
