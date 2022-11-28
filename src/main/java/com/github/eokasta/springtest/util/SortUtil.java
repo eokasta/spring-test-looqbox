@@ -9,6 +9,7 @@ public class SortUtil {
 
     /**
      * Sort a list with Bubble Sort.
+     * This algorithm has a worst-case time complexity of O(n2)
      *
      * @param content the list to sort.
      * @param type {@link Type} of sort

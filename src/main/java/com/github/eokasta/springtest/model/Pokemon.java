@@ -10,6 +10,15 @@ public class Pokemon implements Serializable {
     public Pokemon() {
     }
 
+    public Pokemon(String name, String url) {
+        this.name = name;
+        this.url = url;
+    }
+
+    public Pokemon(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
