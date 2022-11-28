@@ -24,8 +24,8 @@ public class PokemonController {
     }
 
     @GetMapping
-    public ResponseEntity<PokemonDTO<String>> getPokemons(@RequestParam(required = false) String name) {
-        final List<String> pokemons = service.getPokemons(name)
+    public ResponseEntity<PokemonDTO<String>> getPokemons(@RequestParam(required = false) String query) {
+        final List<String> pokemons = service.getPokemons(query)
                 .stream()
                 .map(Pokemon::getName)
                 .collect(Collectors.toList());
@@ -34,8 +34,8 @@ public class PokemonController {
 
     @GetMapping("/highlight")
     public ResponseEntity<PokemonDTO<HighlightPokemon>> getPokemonsHighlight(
-            @RequestParam String name) {
-        final List<HighlightPokemon> pokemons = service.getPokemonsHighlight(name);
+            @RequestParam String query) {
+        final List<HighlightPokemon> pokemons = service.getPokemonsHighlight(query);
         return ResponseEntity.ok().body(new PokemonDTO<>(pokemons));
     }
 
